@@ -1,0 +1,9 @@
+<li class="fields">  
+  <%= f.label :content, "Answer" %>
+  <%= link_to_remove_fields "remove", f %>
+  <%= f.text_field :content %>
+  <%= f.label :correct, class: "checkbox inline" do %>
+    <%= f.check_box :correct %>
+    <span>Correct</span>
+  <% end %>
+</li>

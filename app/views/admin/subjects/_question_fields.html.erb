@@ -1,0 +1,11 @@
+<li class="fields">
+  <%= f.label :content, "Question" %>  
+  <%= link_to_remove_fields "remove", f %>
+  <%= f.text_field :content %>
+  <ul class="users">    
+    <%= f.fields_for :answers do |builder| %>
+      <%= render 'answer_fields', :f => builder %>
+    <% end %>
+    <li><%= link_to_add_fields "Add answer", f, :answers %></li>
+  </ul>
+</li>

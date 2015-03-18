@@ -47,15 +47,15 @@ ActiveRecord::Schema.define(version: 20150317030259) do
 
   create_table "responses", force: :cascade do |t|
     t.integer  "exam_id"
-    t.integer  "subject_id"
+    t.integer  "question_id"
     t.integer  "answer_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
   end
 
   add_index "responses", ["answer_id"], name: "index_responses_on_answer_id"
   add_index "responses", ["exam_id"], name: "index_responses_on_exam_id"
-  add_index "responses", ["subject_id"], name: "index_responses_on_subject_id"
+  add_index "responses", ["question_id"], name: "index_responses_on_question_id"
 
   create_table "subjects", force: :cascade do |t|
     t.string   "name"

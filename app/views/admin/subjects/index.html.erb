@@ -1,0 +1,7 @@
+<% provide(:title, 'All subjects') %>
+<h1>List subjects</h1>
+<%= link_to "Create subject", new_admin_subject_path %>
+<ul class="users">
+  <%= render @subjects %>
+</ul>
+<%= will_paginate @subjects %>
