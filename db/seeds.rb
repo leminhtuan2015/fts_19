@@ -10,6 +10,5 @@ User.create!(name:  "Example User",
               email: email,
               password: "password",
               admin:     false)
-  Subject.create!(name: name, description: email)
 end
 

@@ -79,6 +79,7 @@ ActiveRecord::Schema.define(version: 20150317030259) do
     t.datetime "updated_at"
     t.boolean  "admin"
     t.string   "name"
+    t.string   "avatar"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true

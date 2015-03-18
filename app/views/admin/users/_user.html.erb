@@ -1,5 +1,9 @@
 <li>
-  <%= gravatar_for user %>
+  <% if user.avatar_url.nil? %>
+    <%= image_tag "https://secure.gravatar.com/avatar/1?s=50", class: "gravatar" %>
+  <% else %>
+    <%= image_tag user.avatar.thumbnail.url, class: "gravatar" %>
+  <% end %>
   <%= link_to user.name, edit_admin_user_path(user) %>
   <p>
     <%= user.admin? ? 'Admin' : 'User'%>

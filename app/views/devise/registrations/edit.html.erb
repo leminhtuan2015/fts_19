@@ -6,8 +6,13 @@
       <%= devise_error_messages! %>
 
       <div class="field">
+        <%= f.label :name %><br />
+        <%= f.text_field :name, autofocus: true, class: 'form-control' %>
+      </div>
+
+      <div class="field">
         <%= f.label :email %><br />
-        <%= f.email_field :email, autofocus: true, class: 'form-control' %>
+        <%= f.email_field :email, class: 'form-control' %>
       </div>
 
       <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
@@ -28,6 +33,16 @@
         <%= f.label :current_password %> 
         <i>(we need your current password to confirm your changes)</i><br />
         <%= f.password_field :current_password, autocomplete: "off", class: 'form-control' %>
+      </div>
+
+      <%= f.label :Change_avartar %>
+      <div class="gravatar_edit">
+        <% if @user.avatar_url.nil? %>
+          <%= image_tag "https://secure.gravatar.com/avatar/1?s=50" %>
+        <% else %>
+          <%= image_tag @user.avatar.thumbnail.url %>
+        <% end %>
+        <%= f.file_field :avatar, type: :file %>
       </div>
 
       <div class="actions">
