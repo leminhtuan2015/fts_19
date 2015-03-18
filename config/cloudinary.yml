@@ -1,0 +1,19 @@
+---
+development:
+  cloud_name: buddhism
+  api_key: '849675723621692'
+  api_secret: tF40Dri-T5PxfUW_eoj4ghg4f9s
+  enhance_image_tag: true
+  static_image_support: false
+production:
+  cloud_name: buddhism
+  api_key: '849675723621692'
+  api_secret: tF40Dri-T5PxfUW_eoj4ghg4f9s
+  enhance_image_tag: true
+  static_image_support: true
+test:
+  cloud_name: buddhism
+  api_key: '849675723621692'
+  api_secret: tF40Dri-T5PxfUW_eoj4ghg4f9s
+  enhance_image_tag: true
+  static_image_support: false
