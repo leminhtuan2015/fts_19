@@ -1,0 +1,5 @@
+<li>
+  <%= link_to subject.name, admin_subject_path(subject) %>
+  | <%= link_to "delete", admin_subject_path(subject), 
+    method: :delete, data: {confirm: "You sure?"} %>
+</li>
