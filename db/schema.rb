@@ -25,8 +25,7 @@ ActiveRecord::Schema.define(version: 20150317030259) do
 
   create_table "exams", force: :cascade do |t|
     t.integer  "mark"
-    t.datetime "start"
-    t.datetime "finish"
+    t.datetime "time"
     t.integer  "user_id"
     t.integer  "subject_id"
     t.datetime "created_at", null: false

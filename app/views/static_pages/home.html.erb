@@ -1,8 +1,30 @@
-<div class="center jumbotron">
-  <h1>Welcome to Framgia Test System</h1>
-  <h2>
-    This is the home page for the
-    <a href="">Framgia Test System</a>
-    develop by Le Minh Tuan and Nguyen Thi Kim Chi.
-  </h2>
-</div>
+<% if user_signed_in? %>
+  <h1>All examinations</h1>  
+  <table class="table">
+    <% unless @subjects.nil? %>
+      <thead>
+        <%= form_for @exam do |f| %>      
+          <th style="text-align:right">Subject</th>          
+          <th><%= collection_select :exam, :subject_id, Subject.all, :id, :name %></th>
+          <th><%= f.hidden_field :user_id, value: current_user.id %></th>
+          <th><%= f.submit "Create examination", class: "btn btn-primary" %></th>
+        <% end %>
+      </thead>
+    <% end %>
+    <% unless @exams.nil? %>
+      <tbody>
+        <%= render @exams %>
+      </tbody>
+      <%= will_paginate @exams %>
+    <% end %>
+  </table>
+<% else %>
+  <div class="center jumbotron">
+    <h1>Welcome to Framgia Test System</h1>
+    <h2>
+      This is the home page for the
+      <a href="">Framgia Test System</a>
+      develop by Le Minh Tuan and Nguyen Thi Kim Chi.
+    </h2>
+  </div>
+<% end %>

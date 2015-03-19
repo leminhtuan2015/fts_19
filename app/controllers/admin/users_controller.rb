@@ -1,16 +1,16 @@
-class Admin::UsersController < ApplicationController
-  before_action :authenticate_user!, :admin_user
-
+class Admin::UsersController < BaseController
+  before_action :admin_user
+  
   def index
     @users = User.paginate page: params[:page], per_page: 10
   end
 
-  def new
-    @user = User.new
-  end
-
   def show
     @user = User.find params[:id]
+  end
+
+  def new
+    @user = User.new
   end
 
   def create
@@ -18,10 +18,9 @@ class Admin::UsersController < ApplicationController
     if @user.save      
       flash[:success] = "Created new user"
       redirect_to admin_users_url
-    else
-      flash[:success] = "Error"
-      render 'new'
     end
+    flash[:success] = "Error"
+    render 'new'
   end
 
   def edit
@@ -34,14 +33,12 @@ class Admin::UsersController < ApplicationController
       if current_user == @user
         flash[:success] = 'Profile updated'      
         redirect_to [:admin, @user]
-      else
-        flash[:success] = 'Information changed'      
-        redirect_to admin_users_url
       end
-    else
-      flash[:success] = "Error"
-      render 'edit'
+      flash[:success] = 'Information changed'      
+      redirect_to admin_users_url
     end
+    flash[:success] = "Error"
+    render 'edit'
   end
 
   def destroy
@@ -53,12 +50,5 @@ class Admin::UsersController < ApplicationController
   private
   def user_params
     params.require(:user).permit :name, :email, :password, :admin, :avatar
-  end
-
-  def admin_user
-    unless current_user.admin?
-      flash[:danger] = 'Please log in by admin account.'
-      redirect_to root_url
-    end   
   end
 end

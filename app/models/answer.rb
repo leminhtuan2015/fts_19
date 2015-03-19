@@ -3,5 +3,7 @@ class Answer < ActiveRecord::Base
 
   has_many :responses, dependent: :destroy
 
+  scope :correct_answers, ->{where(correct: true)}
+
   validates :content,  presence: true
 end

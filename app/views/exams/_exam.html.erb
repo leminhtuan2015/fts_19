@@ -1,0 +1,15 @@
+<tr>
+  <td><b><%= exam.created_at %></b></td>
+  <td><%= link_to_if !exam.mark.nil?, exam.subject.name, exam %></td>
+  <td><%= exam.time %></td>
+  <% if current_user.admin? %>
+    <td><%= exam.user.name %></td>
+    <td><%= exam.mark %></td>
+  <% else %>  
+    <% if exam.mark.nil? %>
+      <td><%= link_to "Start", edit_exam_path(exam) %></td>
+    <% else %>
+      <td><%= exam.mark %></td>
+    <% end %>
+  <% end %>
+</tr>
