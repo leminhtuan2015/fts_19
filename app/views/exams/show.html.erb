@@ -1,0 +1,24 @@
+<% provide(:title, 'Examination') %>
+<h1><%= @exam.subject.name %></h1>
+<ul class="users">
+    <% @questions.each do |question| %>
+      <li><%= @questions.index(question)+1 %>. <%= question.content %></li>
+      <ul>
+        <%= collection_check_boxes(:exam, :answer_ids, question.answers, :id, :content) do |b|%>
+          <li>
+            <%= b.check_box disabled: "disabled" %>
+            <%= b.text %>
+          </li>            
+        <% end %>
+        <li>
+          <% @checked = @exam.responses.question_answers(question.id) %>
+          <% @correct = question.answers.correct_answers %>
+          <% if @correct.size == @checked.size && @correct[0].id == @checked[0].answer_id %>
+            <b style="color:green">Correct answer</b>
+          <% else %>
+            <b style="color:red">Incorrect answer</b>
+          <% end %>
+        </li>
+      </ul>
+    <% end %>
+</ul>

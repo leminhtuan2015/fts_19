@@ -5,7 +5,7 @@
       <h1>
         <div class="avatar">
           <% if @user.avatar_url.nil? %>
-            <%= image_tag "https://secure.gravatar.com/avatar/1?s=150" %>
+            <%= image_tag "https://secure.gravatar.com/avatar/1?s=150", class: "gravatar" %>
           <% else %>
             <%= image_tag @user.avatar.standard.url, class: "gravatar" %>
           <% end %>
