@@ -3,6 +3,7 @@ class Question < ActiveRecord::Base
 
   has_many :answers, dependent: :destroy
   has_many :responses, dependent: :destroy
+  has_many :exams, through: :responses
 
   accepts_nested_attributes_for :answers, allow_destroy: true
 

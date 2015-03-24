@@ -11,9 +11,10 @@
           </li>            
         <% end %>
         <li>
-          <% @checked = @exam.responses.question_answers(question.id) %>
-          <% @correct = question.answers.correct_answers %>
-          <% if @correct.size == @checked.size && @correct[0].id == @checked[0].answer_id %>
+          <% @checked = @exam.responses.with_question_id question.id %>
+          <% @correct = @exam.answers.question_correct_answers question.id %>
+          <% @answer_key = question.answers.correct_answers %>
+          <% if @correct.size == @checked.size && @correct.size == @answer_key.size %>
             <b style="color:green">Correct answer</b>
           <% else %>
             <b style="color:red">Incorrect answer</b>
