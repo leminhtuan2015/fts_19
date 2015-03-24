@@ -5,7 +5,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li><%= link_to "Home", root_path %></li>
         <% if user_signed_in? %>
-          <% if current_user.admin? %>
+          <% if can? :update, :all %>
             <li><%= link_to "Users", admin_users_path %></li>
             <li><%= link_to "Subjects", admin_subjects_path %></li>
           <% end %>
