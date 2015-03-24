@@ -24,6 +24,8 @@ class ExamsController < BaseController
 
   def update
     @exam = Exam.find params[:id]
+    @time = Time.at(params[:exam][:time].to_f / 100).utc.strftime("%H:%M:%S")
+    @exam.time = DateTime.strptime(@time, '%H:%M:%S')
     if @exam.update_attributes sheet_params
       flash[:success] = 'Examination updated'      
       redirect_to root_url
@@ -35,7 +37,7 @@ class ExamsController < BaseController
 
   private
   def exam_params
-    params.require(:exam).permit :user_id, :subject_id
+    params.require(:exam).permit :user_id, :subject_id, :time
   end
 
   def sheet_params
