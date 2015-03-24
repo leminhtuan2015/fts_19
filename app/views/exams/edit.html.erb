@@ -1,6 +1,9 @@
 <% provide(:title, 'Examination') %>
 <h1><%= @exam.subject.name %></h1>
-<%= form_for @exam do |f| %>
+
+<h1><span id="countdown">01:00:00</span></h1>
+
+<%= form_for @exam, html: {id: :exam_form} do |f| %>
     <ul class="users">
       <% @questions.each do |question| %>
         <li><%= @questions.index(question)+1 %>. <%= question.content %></li>
@@ -16,3 +19,7 @@
   </ul>
   <%= f.submit "Submit", class: "btn btn-primary" %>
 <% end %>
+
+<script>
+init();
+</script>
