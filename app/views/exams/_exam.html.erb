@@ -1,7 +1,9 @@
 <tr>
   <td><b><%= exam.created_at %></b></td>
   <td><%= link_to_if !exam.mark.nil?, exam.subject.name, exam %></td>
-  <td><%= exam.time.strftime('%H:%M:%S') %></td>
+  <% if exam.time != nil %>
+    <td><%= exam.time.strftime('%H:%M:%S') %></td>
+  <% end %>
   <% if current_user.admin? %>
     <td><%= exam.user.name %></td>
     <td><%= exam.mark %></td>
