@@ -1,4 +1,6 @@
 class ExamsController < BaseController
+  load_and_authorize_resource only: :update
+
   def show
     @exam = Exam.find params[:id]
     @questions = @exam.subject.questions
@@ -37,7 +39,7 @@ class ExamsController < BaseController
 
   private
   def exam_params
-    params.require(:exam).permit :user_id, :subject_id, :time
+    params.require(:exam).permit :user_id, :subject_id
   end
 
   def sheet_params
