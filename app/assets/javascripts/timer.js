@@ -1,9 +1,10 @@
 var $countdown;
 incrementTime = 70;
-currentTime = 400;
+currentTime = 20*6000;
  
 function updateTimer(){
   $countdown.html(formatTime(currentTime));
+  document.getElementById("time").value = currentTime;
   if(currentTime == 0){
     Timer.stop();
     timerComplete();
