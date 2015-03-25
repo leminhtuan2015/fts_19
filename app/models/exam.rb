@@ -6,20 +6,28 @@ class Exam < ActiveRecord::Base
   has_many :questions, through: :responses
   has_many :answers, through: :responses
 
-  before_update :calculate_mark
-  after_update :add_questions
+  before_update :add_questions, :calculate_mark
 
   private
   def calculate_mark
-    @mark = self.answers.correct_answers.count
+    @questions = self.questions
+    @mark = 0    
+    @questions.each_with_index do |question, index|
+      unless question.id == @questions[index-1].id
+        @checked = self.responses.question_answers question.id       
+        @correct = self.answers.question_correct_answers question.id
+        @answer_key = question.answers.correct_answers
+        if @checked.count == @correct.count && @correct.count == @answer_key.count
+          @mark += 1
+        end
+      end
+    end
     self.mark = @mark
   end
 
   def add_questions
-    unless self.mark.nil?
-      self.responses.each do |response|
-        response.update_attributes question_id: response.answer.question_id
-      end
+    self.responses.each do |response|
+      response.update_attributes question_id: response.answer.question_id
     end
   end
 end
