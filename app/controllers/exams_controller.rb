@@ -1,5 +1,5 @@
 class ExamsController < BaseController
-  load_and_authorize_resource only: :update
+  load_and_authorize_resource only: [:update]
 
   def show
     @exam = Exam.find params[:id]
@@ -21,7 +21,15 @@ class ExamsController < BaseController
 
   def edit
     @exam = Exam.find params[:id]
-    @questions = @exam.subject.questions
+    if $redis.get(@exam.id).nil?
+      @questions = @exam.subject.questions
+      if @exam.mark.nil?
+        $redis.set(@exam.id, "doing")
+      end
+    else
+      flash[:danger] = "Just doing it on other device"
+      redirect_to root_path
+    end
   end
 
   def update
