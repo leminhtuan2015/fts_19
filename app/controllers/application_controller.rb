@@ -3,6 +3,11 @@ class ApplicationController < ActionController::Base
   include UsersHelper
   before_filter :configure_permitted_parameters, if: :devise_controller?
 
+  rescue_from CanCan::AccessDenied do |exception|
+    flash[:danger] = 'Damn, you could just submit one time.'
+    redirect_to :back
+  end
+
   protected
   def configure_permitted_parameters
     devise_parameter_sanitizer.for(:sign_up) {|u| u.permit :name, :email,

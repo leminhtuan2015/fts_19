@@ -1,6 +1,6 @@
 <% provide(:title, 'Examination') %>
 <h1><%= @exam.subject.name %></h1>
-<h1><span id="countdown">01:00:00</span></h1>
+<h1><span id="countdown">20:00:00</span></h1>
 <%= form_for @exam, html: {id: :exam_form} do |f| %>
     <ul class="users">
       <% @questions.each_with_index do |question, index| %>
@@ -16,9 +16,9 @@
       <% end %>
   </ul>
   <%= f.hidden_field :time, id: "time"  %>
-  <%= f.submit "Submit", class: "btn btn-primary" %>
+  <%= f.submit "Submit", class: "btn btn-primary", disabled: !@exam.mark.nil? %>
 <% end %>
 
-<script>
-  init();
-</script>
+<% if @exam.mark.nil? %>
+  <script>init();</script>
+<% end %>
