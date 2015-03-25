@@ -12,9 +12,19 @@
       </thead>
     <% end %>
     <% unless @exams.nil? %>
-      <tbody>
-        <%= render @exams %>
-      </tbody>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>At</th>
+            <th>Subject name</th>
+            <th>Timer</th>
+            <th>Mark</th>
+          </tr>
+        </thead>
+        <tbody>
+          <%= render @exams.order('created_at DESC') %>
+        </tbody>
+      </table>
       <%= will_paginate @exams %>
     <% end %>
   </table>

@@ -1,5 +1,5 @@
 <tr>
-  <td><b><%= exam.created_at %></b></td>
+  <td><%= exam.created_at %></td>
   <td><%= link_to_if !exam.mark.nil?, exam.subject.name, exam %></td>
   <td>
     <% unless exam.time.nil? %>
