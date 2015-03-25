@@ -27,3 +27,13 @@ function add_fields(link, association, content) {
   var regexp = new RegExp("new_" + association, "g")
   $(link).parent().before(content.replace(regexp, new_id));
 }
+
+function handle_link(){
+  $("a").click(function(){
+    var answer = confirm("We will be submiting your exam !");
+    if(answer){
+      $('#exam_form').submit();
+    }
+    return answer;
+  });
+}

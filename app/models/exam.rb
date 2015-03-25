@@ -8,6 +8,8 @@ class Exam < ActiveRecord::Base
 
   before_update :add_questions, :calculate_mark
 
+  after_save :redis_del
+
   private
   def calculate_mark
     @questions = self.questions
@@ -29,5 +31,9 @@ class Exam < ActiveRecord::Base
     self.responses.each do |response|
       response.update_attributes question_id: response.answer.question_id
     end
+  end
+
+  def redis_del
+    $redis.del(self.id, "doing")
   end
 end

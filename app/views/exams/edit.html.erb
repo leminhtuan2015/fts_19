@@ -20,5 +20,8 @@
 <% end %>
 
 <% if @exam.mark.nil? %>
-  <script>init();</script>
+  <script>
+    init();
+    handle_link();
+  </script>
 <% end %>
