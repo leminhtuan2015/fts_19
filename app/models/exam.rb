@@ -10,6 +10,8 @@ class Exam < ActiveRecord::Base
 
   after_save :redis_del
 
+  scope :search, ->search {Exam.joins(:subject).where('subjects.name LIKE ?', "%#{search}%") if search}
+
   private
   def calculate_mark
     @questions = self.questions

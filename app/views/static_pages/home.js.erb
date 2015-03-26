@@ -1,0 +1,2 @@
+$("#exams").html("<%= escape_javascript(render @exams.order('created_at DESC')) %>");
+$("div.pagination").html("<%= escape_javascript(will_paginate @exams) %>");
