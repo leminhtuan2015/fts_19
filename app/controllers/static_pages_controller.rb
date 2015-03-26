@@ -12,7 +12,7 @@ class StaticPagesController < ApplicationController
           if params[:search].empty?
             @exams = current_user.exams.paginate page: params[:page], per_page: 10
           else
-            @exams = current_user.exams.search(params[:search].to_i).paginate page: params[:page], per_page: 10
+            @exams = current_user.exams.search(params[:search]).paginate page: params[:page], per_page: 10
           end
         end
       end

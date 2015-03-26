@@ -10,6 +10,8 @@ class Exam < ActiveRecord::Base
 
   after_save :redis_del
 
+  scope :search, ->search {Exam.joins(:subject).where('subjects.name LIKE ?', "%#{search}%") if search}
+
   private
   def calculate_mark
     @questions = self.questions
@@ -35,11 +37,5 @@ class Exam < ActiveRecord::Base
 
   def redis_del
     $redis.del(self.id, "doing")
-  end
-
-  def self.search(search)
-    if search
-      where('id LIKE ?', "%#{search}%")
-    end
   end
 end
