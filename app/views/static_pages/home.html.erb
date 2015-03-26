@@ -3,7 +3,10 @@
   <table class="table">
     <% unless @subjects.nil? %>
       <thead>
-        <%= form_for @exam do |f| %>      
+        <th style="text-align:right">
+          <%= render "search" %>
+        </th>
+        <%= form_for @exam do |f| %>  
           <th style="text-align:right">Subject</th>          
           <th><%= collection_select :exam, :subject_id, Subject.all, :id, :name %></th>
           <th><%= f.hidden_field :user_id, value: current_user.id %></th>
@@ -21,8 +24,8 @@
             <th>Mark</th>
           </tr>
         </thead>
-        <tbody>
-          <%= render @exams.order('created_at DESC') %>
+        <tbody id="exams">
+            <%= render @exams.order('created_at DESC') %>
         </tbody>
       </table>
       <%= will_paginate @exams %>

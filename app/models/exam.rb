@@ -36,4 +36,10 @@ class Exam < ActiveRecord::Base
   def redis_del
     $redis.del(self.id, "doing")
   end
+
+  def self.search(search)
+    if search
+      where('id LIKE ?', "%#{search}%")
+    end
+  end
 end

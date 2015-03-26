@@ -5,8 +5,16 @@ class StaticPagesController < ApplicationController
         @exams = Exam.paginate page: params[:page], per_page: 10
       else
         @subjects = Subject.all
-        @exam = Exam.new      
-        @exams = current_user.exams.paginate page: params[:page], per_page: 10
+        @exam = Exam.new
+        if params[:search].nil?
+          @exams = current_user.exams.paginate page: params[:page], per_page: 10
+        else
+          if params[:search].empty?
+            @exams = current_user.exams.paginate page: params[:page], per_page: 10
+          else
+            @exams = current_user.exams.search(params[:search].to_i).paginate page: params[:page], per_page: 10
+          end
+        end
       end
     end
   end
