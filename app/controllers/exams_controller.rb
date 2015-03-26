@@ -3,7 +3,8 @@ class ExamsController < BaseController
 
   def show
     @exam = Exam.find params[:id]
-    @questions = @exam.subject.questions
+    @question1s = @exam.subject.questions.quiz
+    @question2s = @exam.subject.questions.fill_text
   end
 
   def new
@@ -22,7 +23,8 @@ class ExamsController < BaseController
   def edit
     @exam = Exam.find params[:id]
     if $redis.get(@exam.id).nil?
-      @questions = @exam.subject.questions
+      @question1s = @exam.subject.questions.quiz
+      @question2s = @exam.subject.questions.fill_text
       if @exam.mark.nil?
         $redis.set(@exam.id, "doing")
       end
@@ -51,6 +53,7 @@ class ExamsController < BaseController
   end
 
   def sheet_params
-    params.require(:exam).permit answer_ids: []
+    params.require(:exam).permit(answer_ids: [], responses_attributes: 
+      [:id, :question_id, :answer_id, :answer_content])
   end
 end
