@@ -24,5 +24,4 @@ config/settings/*.local.yml
 config/environments/*.local.yml
 .DS_Store
 /.idea
-Gemfile
 development.sqlite3
