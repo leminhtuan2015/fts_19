@@ -40,7 +40,7 @@ class Admin::SubjectsController < BaseController
   private
   def subject_params
     params.require(:subject).permit(:name, :description, 
-      questions_attributes: [:id, :content, :_destroy, 
+      questions_attributes: [:id, :content, :kind, :_destroy, 
         answers_attributes: [:id, :content, :correct, :_destroy]])
   end
 end

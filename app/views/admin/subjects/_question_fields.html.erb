@@ -2,6 +2,8 @@
   <%= f.label :content, "Question" %>  
   <%= link_to_remove_fields "remove", f %>
   <%= f.text_field :content %>
+  <%= f.label :kind, "Type" %>
+  <%= f.select :kind, [["Quiz question", 1], ["Fill text question", 2]] %>
   <ul class="users">    
     <%= f.fields_for :answers do |builder| %>
       <%= render 'answer_fields', :f => builder %>

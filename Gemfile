@@ -19,7 +19,7 @@ gem 'cloudinary'
 gem 'devise'
 gem 'cancancan'
 gem 'redis'
-gem 'friendly_id', '~> 5.1.0'
+gem 'friendly_id', '~> 5.1.0', :require => "friendly_id"
 
 group :development, :test do
   gem 'byebug'
