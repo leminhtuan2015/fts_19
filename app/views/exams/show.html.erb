@@ -1,5 +1,6 @@
 <% provide(:title, 'Examination') %>
 <h1><%= @exam.subject.name %></h1>
+<%= link_to "Export Exam", exam_path(@exam, :csv) %>
 <ul class="users">
   <% @questions.each_with_index do |question, index| %>
     <li><%= index + 1 %>. <%= question.content %></li>
