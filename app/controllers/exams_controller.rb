@@ -2,7 +2,7 @@ class ExamsController < BaseController
   load_and_authorize_resource only: [:update]
 
   def show
-    @exam = Exam.find params[:id]
+    @exam = Exam.friendly.find params[:id]
     @question1s = @exam.subject.questions.quiz
     @question2s = @exam.subject.questions.fill_text
   end
@@ -21,7 +21,7 @@ class ExamsController < BaseController
   end
 
   def edit
-    @exam = Exam.find params[:id]
+    @exam = Exam.friendly.find params[:id]
     if $redis.get(@exam.id).nil?
       @question1s = @exam.subject.questions.quiz
       @question2s = @exam.subject.questions.fill_text
@@ -35,7 +35,7 @@ class ExamsController < BaseController
   end
 
   def update
-    @exam = Exam.find params[:id]
+    @exam = Exam.friendly.find params[:id]
     @time = Time.at(params[:exam][:time].to_f / 100).utc.strftime("%H:%M:%S")
     @exam.time = DateTime.strptime(@time, '%H:%M:%S')
     if @exam.update_attributes sheet_params

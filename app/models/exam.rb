@@ -1,4 +1,5 @@
 class Exam < ActiveRecord::Base
+  extend FriendlyId
   belongs_to :user
   belongs_to :subject
 
@@ -15,6 +16,10 @@ class Exam < ActiveRecord::Base
 
   scope :search, ->search {Exam.joins(:subject).where('subjects.name LIKE ?', "%#{search}%") if search}
 
+  delegate :name, to: :subject
+
+  friendly_id :slug_candidates, use: [:slugged, :finders]
+  
   private
   def calculate_mark
     if self.mark.nil?
@@ -60,5 +65,12 @@ class Exam < ActiveRecord::Base
 
   def redis_del
     $redis.del(self.id, "doing")
+  end
+
+  def slug_candidates
+    [
+      :name,
+      [:name, :updated_at]
+    ]
   end
 end
