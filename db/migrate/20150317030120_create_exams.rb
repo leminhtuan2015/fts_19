@@ -5,6 +5,7 @@ class CreateExams < ActiveRecord::Migration
       t.datetime :time
       t.references :user, index: true
       t.references :subject, index: true
+      t.string :slug, unique: true
 
       t.timestamps null: false
     end
