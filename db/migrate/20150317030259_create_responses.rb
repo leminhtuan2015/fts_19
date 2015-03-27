@@ -4,6 +4,7 @@ class CreateResponses < ActiveRecord::Migration
       t.references :exam, index: true
       t.references :question, index: true
       t.references :answer, index: true
+      t.string :answer_content
 
       t.timestamps null: false
     end

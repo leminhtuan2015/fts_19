@@ -6,7 +6,10 @@ class Exam < ActiveRecord::Base
   has_many :questions, through: :responses
   has_many :answers, through: :responses
 
-  before_update :add_questions, :calculate_mark
+  accepts_nested_attributes_for :responses
+
+  before_update :add_questions
+  after_update :calculate_mark
 
   after_save :redis_del
 
@@ -14,24 +17,44 @@ class Exam < ActiveRecord::Base
 
   private
   def calculate_mark
-    @questions = self.questions
-    @mark = 0    
-    @questions.each_with_index do |question, index|
-      unless question.id == @questions[index-1].id
-        @checked = self.responses.question_answers question.id       
-        @correct = self.answers.question_correct_answers question.id
-        @answer_key = question.answers.correct_answers
-        if @checked.count == @correct.count && @correct.count == @answer_key.count
-          @mark += 1
+    if self.mark.nil?
+      @question1s = self.questions.quiz
+      @question2s = self.questions.fill_text    
+      @mark = 0    
+      @question1s.each_with_index do |question, index|
+        unless question.id == @question1s[index-1].id && index > 0
+          @checked = self.responses.with_question_id question.id       
+          @correct = self.answers.question_correct_answers question.id
+          @answer_key = question.answers.correct_answers
+          if @checked.count == @correct.count && @correct.count == @answer_key.count
+            @mark += 1
+          end
         end
       end
+      @question2s.each_with_index do |question, index|
+        unless question.id == @question2s[index-1].id && index > 0
+          @filled = self.responses.with_question_id question.id
+          @answer_key = question.answers.correct_answers        
+          @correct = 0
+          @filled.each_with_index do |fill, i| 
+            if fill.answer_content == @answer_key[i].content
+              @correct += 1
+            end
+          end
+          if @correct == @answer_key.count
+            @mark += 1
+          end        
+        end      
+      end      
+      self.update_attributes mark: @mark
     end
-    self.mark = @mark
   end
 
   def add_questions
     self.responses.each do |response|
-      response.update_attributes question_id: response.answer.question_id
+      if response.answer_content.nil?
+        response.update_attributes question_id: response.answer.question_id
+      end
     end
   end
 
