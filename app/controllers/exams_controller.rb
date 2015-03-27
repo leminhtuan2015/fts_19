@@ -4,6 +4,10 @@ class ExamsController < BaseController
   def show
     @exam = Exam.find params[:id]
     @questions = @exam.subject.questions
+    respond_to do |format|
+      format.html
+      format.csv
+    end
   end
 
   def new

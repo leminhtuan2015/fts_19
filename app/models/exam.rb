@@ -19,7 +19,16 @@ class Exam < ActiveRecord::Base
   delegate :name, to: :subject
 
   friendly_id :slug_candidates, use: [:slugged, :finders]
-  
+
+  def self.to_csv
+    CSV.generate do |csv|
+      csv << column_names
+      all.each do |item|
+        csv << item.attributes.values_at(*column_names)
+      end
+    end
+  end
+
   private
   def calculate_mark
     if self.mark.nil?
