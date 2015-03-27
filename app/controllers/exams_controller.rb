@@ -2,9 +2,8 @@ class ExamsController < BaseController
   load_and_authorize_resource only: [:update]
 
   def show
-    @exam = Exam.friendly.find params[:id]
-    @question1s = @exam.subject.questions.quiz
-    @question2s = @exam.subject.questions.fill_text
+    @exam = Exam.find params[:id]
+    @questions = @exam.subject.questions
   end
 
   def new
@@ -23,8 +22,7 @@ class ExamsController < BaseController
   def edit
     @exam = Exam.friendly.find params[:id]
     if $redis.get(@exam.id).nil?
-      @question1s = @exam.subject.questions.quiz
-      @question2s = @exam.subject.questions.fill_text
+      @questions = @exam.subject.questions
       if @exam.mark.nil?
         $redis.set(@exam.id, "doing")
       end

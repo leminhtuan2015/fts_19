@@ -8,9 +8,4 @@ class Question < ActiveRecord::Base
   accepts_nested_attributes_for :answers, allow_destroy: true
 
   validates :content,  presence: true
-
-  scope :quiz, ->{where('questions.id IN (select answers.question_id 
-    from answers where answers.correct=?)', false)}
-  scope :fill_text, ->{where('questions.id NOT IN (select answers.question_id 
-    from answers where answers.correct=?)', false)}
 end

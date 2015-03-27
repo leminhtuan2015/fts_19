@@ -23,33 +23,29 @@ class Exam < ActiveRecord::Base
   private
   def calculate_mark
     if self.mark.nil?
-      @question1s = self.questions.quiz
-      @question2s = self.questions.fill_text    
+      @questions = self.questions
       @mark = 0    
-      @question1s.each_with_index do |question, index|
-        unless question.id == @question1s[index-1].id && index > 0
-          @checked = self.responses.with_question_id question.id       
-          @correct = self.answers.question_correct_answers question.id
-          @answer_key = question.answers.correct_answers
-          if @checked.count == @correct.count && @correct.count == @answer_key.count
+      @questions.each_with_index do |question, index|
+        unless question.id == @questions[index-1].id && index > 0
+          if question.kind == 1
+            @checked = self.responses.with_question_id question.id       
+            @correct = self.answers.question_correct_answers question.id
+            @answer_key = question.answers.correct_answers
+            if @checked.count == @correct.count && @correct.count == @answer_key.count
+              @mark += 1
+            end
+          else
+            @filled = self.responses.with_question_id question.id
+            @answer_key = question.answers
+            @filled.each_with_index do |fill, i| 
+              if fill.answer_content != @answer_key[i].content
+                @mark -= 1
+                break
+              end
+            end
             @mark += 1
           end
         end
-      end
-      @question2s.each_with_index do |question, index|
-        unless question.id == @question2s[index-1].id && index > 0
-          @filled = self.responses.with_question_id question.id
-          @answer_key = question.answers.correct_answers        
-          @correct = 0
-          @filled.each_with_index do |fill, i| 
-            if fill.answer_content == @answer_key[i].content
-              @correct += 1
-            end
-          end
-          if @correct == @answer_key.count
-            @mark += 1
-          end        
-        end      
       end      
       self.update_attributes mark: @mark
     end

@@ -3,28 +3,28 @@
 <h1><span id="countdown">20:00:00</span></h1>
 <%= form_for @exam, html: {id: :exam_form} do |f| %>
   <ul class="users">
-    <% @question1s.each_with_index do |question, index| %>
+    <% @questions.each_with_index do |question, index| %>
       <li><%= index + 1 %>. <%= question.content %></li>
-      <ul>
-        <%= collection_check_boxes(:exam, :answer_ids, question.answers, :id, :content) do |b|%>
-          <li>
-            <%= b.label(:"data-value" => b.value) {b.check_box + b.text} %>
-          </li>            
-        <% end %>
-      </ul>
-    <% end %>
-    <% @question2s.each_with_index do |question, index| %>
-      <li><%= index + @question1s.size + 1 %>. <%= question.content %></li>     
-      <ul>
-        <% question.answers.each do |answer| %> 
-          <% @response = Response.new %>
-          <%= f.fields_for :responses, @response do |builder| %>
-            <%= builder.hidden_field :question_id, value: question.id  %>
-            <li><%= builder.text_field :answer_content %></li>
+      <% if question.kind == 1 %>
+        <ul>
+          <%= collection_check_boxes(:exam, :answer_ids, question.answers, :id, :content) do |b|%>
+            <li>
+              <%= b.label(:"data-value" => b.value) {b.check_box + b.text} %>
+            </li>            
           <% end %>
-        <% end %>
-      </ul>
-    <% end %>  
+        </ul>
+      <% else %>
+        <ul>
+          <% question.answers.each do |answer| %> 
+            <% @response = Response.new %>
+            <%= f.fields_for :responses, @response do |builder| %>
+              <%= builder.hidden_field :question_id, value: question.id  %>
+              <li><%= builder.text_field :answer_content %></li>
+            <% end %>
+          <% end %>
+        </ul>
+      <% end %>
+    <% end %> 
   </ul>  
   <%= f.hidden_field :time, id: "time"  %>
   <%= f.submit "Submit", class: "btn btn-primary", disabled: !@exam.mark.nil? %>
