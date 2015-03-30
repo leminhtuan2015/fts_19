@@ -25,3 +25,6 @@ config/environments/*.local.yml
 .DS_Store
 /.idea
 development.sqlite3
+
+# Ignore application configuration
+/config/application.yml

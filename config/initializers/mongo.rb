@@ -1,0 +1,1 @@
+$db = Mongo::Connection.new('localhost', 27017).db("fts")
