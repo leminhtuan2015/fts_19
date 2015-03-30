@@ -16,7 +16,8 @@ class ExamsController < BaseController
 
   def create
     @exam = Exam.new exam_params
-    if @exam.save      
+    if @exam.save  
+      $redis.set(@exam.id.to_s+"remind", "0")
       flash[:success] = "Created new examination"
       redirect_to root_url and return
     end    

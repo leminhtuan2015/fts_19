@@ -11,12 +11,12 @@ class Exam < ActiveRecord::Base
 
   before_update :add_questions
   after_update :calculate_mark
-
-  after_save :redis_del
+  after_save :redis_del, :remind_do_exam
 
   scope :search, ->search {Exam.joins(:subject).where('subjects.name LIKE ?', "%#{search}%") if search}
 
   delegate :name, to: :subject
+  delegate :email, to: :user
 
   friendly_id :slug_candidates, use: [:slugged, :finders]
 
@@ -78,4 +78,17 @@ class Exam < ActiveRecord::Base
       [:name, :updated_at]
     ]
   end
+
+  def remind_do_exam
+    remind = $redis.get(self.id.to_s+"remind").to_i
+    $redis.set(self.id.to_s+"remind", (remind+1).to_s)
+    if remind < 3
+      UserMailer.remind_do_exam_email(self.email).deliver_now
+      remind_do_exam
+    else
+      Exam.destroy self.id
+    end
+  end
+
+   handle_asynchronously :remind_do_exam, run_at: Proc.new { 1.minutes.from_now }
 end
