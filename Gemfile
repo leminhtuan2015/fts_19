@@ -19,7 +19,15 @@ gem 'cloudinary'
 gem 'devise'
 gem 'cancancan'
 gem 'redis'
-gem 'friendly_id', '~> 5.1.0', :require => "friendly_id"
+gem 'friendly_id', '~> 5.1.0', require: "friendly_id"
+gem 'delayed_job_active_record'
+gem 'daemons'
+gem "figaro"
+gem "foreman"
+gem 'whenever', '~> 0.8.4', require: false
+gem 'mongo_mapper'
+gem 'bson_ext'
+gem 'mongo'
 
 group :development, :test do
   gem 'byebug'
