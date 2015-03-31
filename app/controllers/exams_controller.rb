@@ -10,10 +10,6 @@ class ExamsController < BaseController
     end
   end
 
-  def new
-    @exam = Exam.new
-  end
-
   def create
     @exam = Exam.new exam_params
     if @exam.save      
@@ -51,7 +47,7 @@ class ExamsController < BaseController
 
   private
   def exam_params
-    params.require(:exam).permit :user_id, :subject_id
+    params.require(:exam).permit :user_id, :subject_id, :status
   end
 
   def sheet_params

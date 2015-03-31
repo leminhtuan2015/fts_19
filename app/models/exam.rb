@@ -4,12 +4,15 @@ class Exam < ActiveRecord::Base
   belongs_to :subject
 
   has_many :responses, dependent: :destroy
-  has_many :questions, through: :responses
   has_many :answers, through: :responses
+  has_many :approvals, dependent: :destroy
+  has_many :questions, through: :approvals
 
   accepts_nested_attributes_for :responses
+  accepts_nested_attributes_for :approvals
 
   before_update :add_questions
+  after_update :update_approvals
   after_update :calculate_mark
 
   after_save :redis_del
@@ -29,42 +32,60 @@ class Exam < ActiveRecord::Base
     end
   end
 
+  def checked?
+    self.status == 2
+  end
+
+  def done?
+    self.status == 1
+  end
+
+  def new?
+    self.status == 0
+  end
+
   private
   def calculate_mark
-    if self.mark.nil?
-      @questions = self.questions
+    if self.checked?
       @mark = 0    
-      @questions.each_with_index do |question, index|
-        unless question.id == @questions[index-1].id && index > 0
-          if question.kind == 1
-            @checked = self.responses.with_question_id question.id       
-            @correct = self.answers.question_correct_answers question.id
-            @answer_key = question.answers.correct_answers
-            if @checked.count == @correct.count && @correct.count == @answer_key.count
-              @mark += 1
-            end
-          else
-            @filled = self.responses.with_question_id question.id
-            @answer_key = question.answers
-            @filled.each_with_index do |fill, i| 
-              if fill.answer_content != @answer_key[i].content
-                @mark -= 1
-                break
-              end
-            end
-            @mark += 1
-          end
+      self.approvals.each do |approval|        
+        if approval.correct?
+          @mark += 1
         end
-      end      
-      self.update_attributes mark: @mark
+      end
+      self.status = 3
+      self.update_attributes mark: @mark      
     end
   end
 
-  def add_questions
-    self.responses.each do |response|
-      if response.answer_content.nil?
-        response.update_attributes question_id: response.answer.question_id
+  def update_approvals
+    if self.done?
+      self.questions.each_with_index do |question, index|
+        if question.kind == 1
+          @checked = self.responses.with_question_id question.id       
+          @correct = self.answers.question_correct_answers question.id
+          @answer_key = question.answers.correct_answers
+          if @checked.count == @correct.count && @correct.count == @answer_key.count
+            self.approvals.with_question_id(question.id)[0]
+            .update_attributes correct: true
+          else
+            self.approvals.with_question_id(question.id)[0]
+            .update_attributes correct: false
+          end
+        end
       end
+    end
+  end
+
+  def add_questions     
+    if self.new?
+      self.responses.each do |response|
+        if response.answer_content.nil?
+          response.update_attributes question_id: response.answer.question_id
+        end
+      end
+      self.questions << self.subject.questions
+      self.status = 1
     end
   end
 

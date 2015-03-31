@@ -1,0 +1,34 @@
+<% provide(:title, 'Approve exam') %>
+<h1>Approve exam <%= @exam.subject.name %></h1>
+<%= form_for [:admin, @exam] do |f| %>
+  <ul class="users">
+    <% @exam.approvals.each_with_index do |approval, index| %>
+      <li><%= index + 1 %>. <%= approval.question.content %></li>
+      <ul>
+        <% if approval.question.kind == 1 %>
+          <% approval.question.answers.each do |answer|%>
+            <li>
+              <% if @exam.answer_ids.include?(answer.id) %>
+                <input type="checkbox" checked="checked" disabled="disabled" />
+              <% else %>
+                <input type="checkbox" disabled="disabled" />
+              <% end %>
+              <%= answer.content %>
+            </li>            
+          <% end %>
+        <% else %>
+          <% @exam.responses.with_question_id(approval.question.id).each do |response| %>
+            <li><input value="<%= response.answer_content %>", disabled="disabled" /></li>
+          <% end %>  
+        <% end %>
+        <%= f.fields_for :approvals, approval do |builder| %>
+          <li>
+            <%= builder.check_box :correct %>
+            Correct
+          </li>
+        <% end %> 
+      </ul>
+    <% end %>
+  </ul>
+  <%= f.submit "Submit", class: "btn btn-primary" %>
+<% end %>

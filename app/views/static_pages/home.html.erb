@@ -7,11 +7,16 @@
           <%= render "search" %>
           <%= render "search_remote" %>
         </th>
-        <%= form_for @exam do |f| %>  
-          <th style="text-align:right">Subject</th>          
-          <th><%= collection_select :exam, :subject_id, Subject.all, :id, :name %></th>
-          <th><%= f.hidden_field :user_id, value: current_user.id %></th>
-          <th><%= f.submit "Create examination", class: "btn btn-primary" %></th>
+        <% unless current_user.admin? %>
+          <%= form_for @exam do |f| %>  
+            <th style="text-align:right">Subject</th>          
+            <th><%= collection_select :exam, :subject_id, Subject.all, :id, :name %></th>
+            <th>
+              <%= f.hidden_field :user_id, value: current_user.id %>
+              <%= f.hidden_field :status, value: 0 %>
+            </th>
+            <th><%= f.submit "Create examination", class: "btn btn-primary" %></th>
+          <% end %>
         <% end %>
       </thead>
     <% end %>
@@ -19,10 +24,18 @@
       <table class="table">
         <thead>
           <tr>
-            <th>At</th>
-            <th>Subject name</th>
-            <th>Timer</th>
-            <th>Mark</th>
+            <% if current_user.admin? %>
+              <th>At</th>
+              <th>Subject name</th>
+              <th>Timer</th>
+              <th>User name</th>
+              <th>Mark</th>
+            <% else %>
+              <th>At</th>
+              <th>Subject name</th>
+              <th>Timer</th>
+              <th>Mark</th>
+            <% end %>
           </tr>
         </thead>
         <tbody id="exams">

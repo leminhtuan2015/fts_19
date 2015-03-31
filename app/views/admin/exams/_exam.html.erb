@@ -1,0 +1,13 @@
+<tr>
+  <td><%= exam.created_at %></td>
+  <td><%= link_to_if !exam.new?, exam.subject.name, edit_admin_exam_path(exam) %></td>
+  <td>
+    <% unless exam.time.nil? %>
+      <%= exam.time.strftime('%H:%M:%S') %>
+    <% end %>
+  </td>
+  <td><%= exam.user.name %></td>
+  <% unless exam.mark.nil? %>
+    <td><%= exam.mark %></td>  
+  <% end %>  
+</tr>
