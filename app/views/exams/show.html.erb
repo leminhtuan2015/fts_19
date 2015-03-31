@@ -1,50 +1,34 @@
 <% provide(:title, 'Examination') %>
 <h1><%= @exam.subject.name %></h1>
+<% if @exam.checked? %>
+  <h1>Mark: <%= @exam.mark %></h1>
+<% end %>
 <%= link_to "Export Exam", exam_path(@exam, :csv) %>
 <ul class="users">
   <% @questions.each_with_index do |question, index| %>
     <li><%= index + 1 %>. <%= question.content %></li>
-    <% if question.kind == 1 %>
-      <ul>
+    <ul>
+      <% if question.kind == 1 %>
         <%= collection_check_boxes(:exam, :answer_ids, question.answers, :id, :content) do |b|%>
           <li>
             <%= b.check_box disabled: "disabled" %>
             <%= b.text %>
           </li>            
         <% end %>
-        <li>
-          <% @checked = @exam.responses.with_question_id question.id %>
-          <% @correct = @exam.answers.question_correct_answers question.id %>
-          <% @answer_key = question.answers.correct_answers %>
-          <% if @correct.size == @checked.size && @correct.size == @answer_key.size %>
-            <b style="color:green">Correct answer</b>
-          <% else %>
-            <b style="color:red">Incorrect answer</b>
-          <% end %>
-        </li>
-      </ul>
-    <% else %>
-      <ul>
+      <% else %>
         <% @exam.responses.with_question_id(question.id).each do |response| %>
           <li><input value="<%= response.answer_content %>", disabled="disabled" /></li>
-        <% end %>
-        <% @correct = true
-          @filled = @exam.responses.with_question_id question.id 
-          @answer_key = question.answers
-          @filled.each_with_index do |fill, i|        
-            if fill.answer_content != @answer_key[i].content
-              @correct = false
-              break
-            end 
-          end %>
-        <li>            
-          <% if @correct %>        
+        <% end %>        
+      <% end %>
+      <% if @exam.checked? %>
+        <li>
+          <% if @exam.approvals.with_question_id(question.id)[0].correct? %>
             <b style="color:green">Correct answer</b>
           <% else %>
             <b style="color:red">Incorrect answer</b>
           <% end %>
         </li>
-      </ul>
-    <% end %>
+      <% end %>
+    </ul>    
   <% end %>
 </ul>

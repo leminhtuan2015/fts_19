@@ -10,10 +10,14 @@
     <td><%= exam.user.name %></td>
     <td><%= exam.mark %></td>
   <% else %>  
-    <% if exam.mark.nil? %>
+    <% if exam.new? %>
       <td><%= link_to "Start", edit_exam_path(exam) %></td>
     <% else %>
-      <td><%= exam.mark %></td>
+      <% if exam.done? %>
+        <td><%= link_to "Done", exam %></td>
+      <% else %>
+        <td><%= exam.mark %></td>
+      <% end %>
     <% end %>
   <% end %>
 </tr>

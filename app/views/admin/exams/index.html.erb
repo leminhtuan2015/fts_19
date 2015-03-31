@@ -1,0 +1,17 @@
+<% provide(:title, 'All exams') %>
+<h1>List exams</h1>
+<table class="table">
+  <thead>
+    <tr>
+      <th>At</th>
+      <th>Subject name</th>
+      <th>Timer</th>
+      <th>User name</th>
+      <th>Mark</th>
+    </tr>
+  </thead>
+  <tbody id="exams">
+    <%= render @exams.order('created_at DESC') %>
+  </tbody>
+</table>
+<%= will_paginate @exams %>
