@@ -1,5 +1,6 @@
 class Exam < ActiveRecord::Base
   extend FriendlyId
+  
   belongs_to :user
   belongs_to :subject
 
@@ -14,12 +15,12 @@ class Exam < ActiveRecord::Base
   before_update :add_questions
   after_update :update_approvals
   after_update :calculate_mark
-
-  after_save :redis_del
+  after_save :redis_del, :add_to_remind_list
 
   scope :search, ->search {Exam.joins(:subject).where('subjects.name LIKE ?', "%#{search}%") if search}
 
   delegate :name, to: :subject
+  delegate :email, to: :user
 
   friendly_id :slug_candidates, use: [:slugged, :finders]
 
@@ -90,7 +91,7 @@ class Exam < ActiveRecord::Base
   end
 
   def redis_del
-    $redis.del(self.id, "doing")
+    $redis.del self.id, "doing"
   end
 
   def slug_candidates
@@ -98,5 +99,15 @@ class Exam < ActiveRecord::Base
       :name,
       [:name, :updated_at]
     ]
+  end
+
+  def add_to_remind_list
+    data = {exam_id: self.id, email: self.email, remind_time: 0, remind_last: ""}
+    $db["exam"].insert data
+  end
+
+  def self.remind
+    $redis.set "time", Time.now
+    UserMailer.delay.send_mail_remind
   end
 end
