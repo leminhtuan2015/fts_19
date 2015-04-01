@@ -7,7 +7,7 @@ class Ability
       can :manage, :all
     else
       can :update, Exam do |exam|
-        exam.mark.nil?
+        exam.new?
       end
     end
   end

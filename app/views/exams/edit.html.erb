@@ -27,9 +27,9 @@
     <% end %> 
   </ul>  
   <%= f.hidden_field :time, id: "time"  %>
-  <%= f.submit "Submit", class: "btn btn-primary", disabled: !@exam.mark.nil? %>
+  <%= f.submit "Submit", class: "btn btn-primary", disabled: !@exam.new? %>
 <% end %>
-<% if @exam.mark.nil? %>
+<% if @exam.new? %>
   <script>
     init();
     handle_link();

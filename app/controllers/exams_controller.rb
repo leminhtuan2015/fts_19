@@ -1,5 +1,6 @@
-class ExamsController < BaseController
+class ExamsController < ApplicationController
   load_and_authorize_resource only: [:update]
+  before_action :authenticate_user!
 
   def show
     @exam = Exam.find params[:id]
@@ -23,9 +24,7 @@ class ExamsController < BaseController
     @exam = Exam.friendly.find params[:id]
     if $redis.get(@exam.id).nil?
       @questions = @exam.subject.questions
-      if @exam.mark.nil?
-        $redis.set(@exam.id, "doing")
-      end
+      $redis.set(@exam.id, "doing") if @exam.new?
     else
       flash[:danger] = "Just doing it on other device"
       redirect_to root_path
@@ -38,11 +37,10 @@ class ExamsController < BaseController
     @exam.time = DateTime.strptime(@time, '%H:%M:%S')
     if @exam.update_attributes sheet_params
       flash[:success] = 'Examination updated'      
-      redirect_to root_url
     else
       flash[:danger] = "Error"
-      redirect_to root_url
     end
+    redirect_to root_url
   end
 
   private

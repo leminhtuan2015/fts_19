@@ -3,11 +3,11 @@
     <%= f.label :name %><br />
     <%= f.text_field :name %>
     <%= f.label :description, "Description" %>
-    <%= f.text_area :description, :rows => 3 %><br />
+    <%= f.text_area :description, rows: 3 %><br />
   </p>
   <ul class="users">    
     <%= f.fields_for :questions do |builder| %>
-      <%= render 'question_fields', :f => builder %>
+      <%= render 'question_fields', f: builder %>
     <% end %>
     <li><%= link_to_add_fields "Add Question", f, :questions %></li>
   </ul>

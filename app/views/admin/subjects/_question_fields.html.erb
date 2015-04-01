@@ -6,7 +6,7 @@
   <%= f.select :kind, [["Quiz question", 1], ["Fill text question", 2]] %>
   <ul class="users">    
     <%= f.fields_for :answers do |builder| %>
-      <%= render 'answer_fields', :f => builder %>
+      <%= render 'answer_fields', f: builder %>
     <% end %>
     <li><%= link_to_add_fields "Add answer", f, :answers %></li>
   </ul>

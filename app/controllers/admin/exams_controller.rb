@@ -1,6 +1,4 @@
 class Admin::ExamsController < BaseController
-  before_action :admin_user
-
   def index
     @exams = Exam.paginate page: params[:page], per_page: 10
   end

@@ -50,9 +50,7 @@ class Exam < ActiveRecord::Base
     if self.checked?
       @mark = 0    
       self.approvals.each do |approval|        
-        if approval.correct?
-          @mark += 1
-        end
+        @mark += 1  if approval.correct?
       end
       self.status = 3
       self.update_attributes mark: @mark      
